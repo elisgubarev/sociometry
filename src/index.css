@@ -154,7 +154,12 @@
   scroll-behavior: auto !important;
 }
 
-/* The one exception: rows sliding into place while a list is reordered by dragging. */
+/* Exceptions: toasts slide in from the top (Sonner's own timing)… */
+[data-sonner-toast] {
+  transition: transform 400ms, opacity 400ms, height 400ms, box-shadow 200ms !important;
+}
+
+/* …and rows slide into place while a list is reordered by dragging. */
 [data-sortable] {
   transition: var(--sortable-transition, none) !important;
 }

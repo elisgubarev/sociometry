@@ -56,7 +56,7 @@ export default function App() {
             </div>
             {/* Hidden in print: even an empty box after the landscape matrix page adds a blank page. */}
             <div className="print:hidden">
-              <Toaster position="bottom-center" />
+              <Toaster />
             </div>
           </ImportProvider>
         </WorkspaceProvider>
