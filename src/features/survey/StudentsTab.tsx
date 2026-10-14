@@ -105,7 +105,7 @@ export function StudentsTab({ survey }: { survey: Survey }) {
               disabled={full}
               autoComplete="off"
             />
-            <Button type="submit" variant="outline" disabled={!cleanName(newName) || full}>
+            <Button type="submit" variant="outline" disabled={!cleanName(newName) || full} aria-label="Добавить">
               <PlusIcon />
               <span className="hidden sm:inline">Добавить</span>
             </Button>
