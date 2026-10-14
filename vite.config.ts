@@ -4,6 +4,9 @@ import react from "@vitejs/plugin-react"
 import { defineConfig } from "vitest/config"
 
 export default defineConfig({
+  // Relative asset paths: the site works from any folder (e.g. school.ru/sociometry/).
+  // Safe because routing uses the URL hash.
+  base: "./",
   plugins: [react(), tailwindcss()],
   resolve: {
     alias: {
