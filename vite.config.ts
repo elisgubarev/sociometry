@@ -14,8 +14,8 @@ export default defineConfig({
     },
   },
   build: {
-    // One ~200 KB (gzip) bundle: React, Base UI and zod. Excel export loads on demand.
-    chunkSizeWarningLimit: 700,
+    // One ~225 KB (gzip) bundle: React, Base UI, zod and dnd-kit. Excel export loads on demand.
+    chunkSizeWarningLimit: 800,
   },
   test: {
     environment: "node",
