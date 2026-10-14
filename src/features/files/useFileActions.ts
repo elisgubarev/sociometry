@@ -20,7 +20,8 @@ export function useFileActions() {
     try {
       const { saved, surveys: merged } = await saver.save()
       if (merged) replaceAll(merged)
-      if (!saved && saver.getStatus().folderState === "error") toast.error("Не удалось сохранить в папку.")
+      if (saved) toast.success(`Сохранено в /${saver.getStatus().folderName}`)
+      else if (saver.getStatus().folderState === "error") toast.error("Не удалось сохранить в папку.")
     } catch (e) {
       toast.error(errorText(e, "Не удалось сохранить."))
     }
@@ -28,8 +29,9 @@ export function useFileActions() {
 
   const chooseFolder = useCallback(async () => {
     try {
-      const { surveys: merged } = await saver.chooseFolder()
+      const { saved, surveys: merged } = await saver.chooseFolder()
       if (merged) replaceAll(merged)
+      if (saved) toast.success(`Сохранено в /${saver.getStatus().folderName}`)
     } catch (e) {
       toast.error(errorText(e, "Не удалось открыть папку."))
     }
