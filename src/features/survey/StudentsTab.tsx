@@ -153,7 +153,7 @@ export function StudentsTab({ survey }: { survey: Survey }) {
         open={!!toDelete}
         onOpenChange={(o) => !o && setToDelete(null)}
         title={`Удалить ${toDelete?.name ?? ""}?`}
-        description="Ученик будет удалён из списка, его анкеты и из анкет одноклассников."
+        description="Его анкета и все выборы, где его называли, тоже будут удалены."
         confirmLabel="Удалить"
         destructive
         onConfirm={() => {
