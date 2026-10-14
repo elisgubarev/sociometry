@@ -46,7 +46,9 @@ export function SurveyFields({ value, onChange, minChoices = MIN_MAX_CHOICES, cl
             id={`${id}-date`}
             type="date"
             value={value.date}
-            onChange={(e) => e.target.value && onChange({ date: e.target.value })}
+            // A typed 5-digit year is a valid date to the browser but not to the file format.
+            max="9999-12-31"
+            onChange={(e) => /^\d{4}-\d{2}-\d{2}$/.test(e.target.value) && onChange({ date: e.target.value })}
             required
           />
         </Field>
