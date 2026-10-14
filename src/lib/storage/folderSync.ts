@@ -61,13 +61,16 @@ export interface Reconciled {
  * "deleted on one side" apart from "new on the other side":
  * - in both: the more recently changed version wins;
  * - only in the folder: new from elsewhere → added; known → deleted here → its file is removed;
- * - only in the browser: new here → kept (and written); known → deleted elsewhere → dropped.
+ * - only in the browser: new here → kept (and written); known → deleted elsewhere → dropped,
+ *   but only while the folder still holds some known survey. A folder with none of them
+ *   (empty network drive, sync client still downloading, another folder) drops nothing.
  */
 export function reconcile(current: Survey[], scan: FolderScan, known: Set<string>): Reconciled {
   const result = new Map<string, Survey>()
   const deleteNames: string[] = []
   let changed = false
   const mine = new Map(current.map((s) => [s.id, s]))
+  const canDrop = scan.complete && [...known].some((id) => scan.entries.has(id))
 
   for (const s of current) {
     const entry = scan.entries.get(s.id)
@@ -78,7 +81,7 @@ export function reconcile(current: Survey[], scan: FolderScan, known: Set<string
       } else {
         result.set(s.id, s)
       }
-    } else if (known.has(s.id) && scan.complete) {
+    } else if (known.has(s.id) && canDrop) {
       changed = true
     } else {
       result.set(s.id, s)

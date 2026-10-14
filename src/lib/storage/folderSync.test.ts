@@ -56,8 +56,9 @@ describe("reconcile", () => {
   })
 
   it("file deleted elsewhere: the survey is dropped, unless the folder could not be fully read", () => {
-    expect(reconcile([survey("a")], parseFolder([], []), new Set(["a"])).surveys).toEqual([])
-    expect(ids(reconcile([survey("a")], parseFolder([], ["x.json"]), new Set(["a"])).surveys)).toEqual(["a"])
+    const b = file(survey("b"), "b.json")
+    expect(ids(reconcile([survey("a"), survey("b")], parseFolder([b], []), new Set(["a", "b"])).surveys)).toEqual(["b"])
+    expect(ids(reconcile([survey("a"), survey("b")], parseFolder([b], ["x.json"]), new Set(["a", "b"])).surveys)).toEqual(["a", "b"])
   })
 
   it("a survey created here is kept", () => {
