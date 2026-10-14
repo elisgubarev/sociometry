@@ -181,6 +181,7 @@ function StudentRow({
   const { attributes, listeners, setNodeRef, setActivatorNodeRef, transform, transition, isDragging } = useSortable({
     id: student.id,
     disabled: !sortable,
+    attributes: { roleDescription: "перемещаемый элемент" },
     transition: { duration: 200, easing: "cubic-bezier(0.25, 1, 0.5, 1)" },
   })
   // The app has no motion except here: index.css lets [data-sortable] use this transition.
