@@ -3,6 +3,7 @@ import { createStore, del, get, set, type UseStore } from "idb-keyval"
 const WORKSPACE_KEY = "workspace"
 const FOLDER_KEY = "folderHandle"
 const INDEX_KEY = "folderIndex"
+const UNREADABLE_KEY = "workspaceUnreadable"
 const OLD_FILE_KEY = "fileHandle"
 const LS_FALLBACK_KEY = "sociometry:workspace"
 
@@ -97,6 +98,20 @@ export async function writeFolderIndex(index: FolderIndex): Promise<void> {
   if (!s) return
   try {
     await set(INDEX_KEY, index, s)
+  } catch {
+    /* ignore */
+  }
+}
+
+/**
+ * Keeps the browser copy as it was when part of it could not be read, before
+ * the next save overwrites it, so the data can still be recovered by hand.
+ */
+export async function keepUnreadableCopy(text: string): Promise<void> {
+  const s = getStore()
+  if (!s) return
+  try {
+    await set(UNREADABLE_KEY, { at: new Date().toISOString(), text }, s)
   } catch {
     /* ignore */
   }

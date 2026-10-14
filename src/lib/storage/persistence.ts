@@ -11,6 +11,7 @@ import {
 } from "./fileAccess"
 import { fileNameFor, parseFolder, reconcile } from "./folderSync"
 import {
+  keepUnreadableCopy,
   readBrowserCopy,
   readFolderHandle,
   readFolderIndex,
@@ -53,8 +54,11 @@ function parseWorkspace(text: string | undefined): Workspace | null {
   if (!text) return null
   try {
     const parsed = parseDataFile(text)
-    return parsed.kind === "workspace" ? parsed.data : null
+    if (parsed.kind !== "workspace") return null
+    if (parsed.skipped > 0) void keepUnreadableCopy(text)
+    return parsed.data
   } catch {
+    void keepUnreadableCopy(text)
     return null
   }
 }

@@ -63,7 +63,8 @@ const workspaceSchema = z.object({
   kind: z.literal("workspace"),
   version: z.literal(1),
   savedAt: z.string(),
-  surveys: z.array(surveySchema),
+  // Checked one by one below: a single unreadable survey must not hide the others.
+  surveys: z.array(z.unknown()),
 })
 
 const surveyFileSchema = z.object({
@@ -77,7 +78,8 @@ const surveyFileSchema = z.object({
 export class FileFormatError extends Error {}
 
 export type ParsedFile =
-  | { kind: "workspace"; data: Workspace }
+  /** `skipped`: surveys in the file that could not be read and were left out. */
+  | { kind: "workspace"; data: Workspace; skipped: number }
   | { kind: "survey"; data: SurveyFile }
 
 /** Parses text from a data file or browser storage. Throws FileFormatError with a Russian message. */
@@ -98,7 +100,14 @@ export function parseDataFile(text: string): ParsedFile {
   const kind = (raw as { kind?: unknown }).kind
   if (kind === "workspace") {
     const r = workspaceSchema.safeParse(raw)
-    if (r.success) return { kind: "workspace", data: r.data }
+    if (r.success) {
+      const surveys: Survey[] = []
+      for (const item of r.data.surveys) {
+        const s = surveySchema.safeParse(item)
+        if (s.success) surveys.push(s.data)
+      }
+      return { kind: "workspace", data: { ...r.data, surveys }, skipped: r.data.surveys.length - surveys.length }
+    }
   } else if (kind === "survey") {
     const r = surveyFileSchema.safeParse(raw)
     if (r.success) return { kind: "survey", data: r.data }
