@@ -122,9 +122,64 @@
     @apply border-border outline-ring/50;
     }
   body {
-    @apply bg-background text-foreground;
+    @apply bg-neutral-50 text-foreground antialiased;
     }
   html {
     @apply font-sans;
+    -webkit-text-size-adjust: 100%;
     }
+  /* Tailwind v4 resets buttons to the default cursor; everything clickable gets the hand. */
+  button:not(:disabled),
+  [role="button"]:not([aria-disabled="true"]),
+  [role="tab"]:not([aria-disabled="true"]),
+  [role="switch"],
+  [role="combobox"],
+  a[href],
+  label[for],
+  select,
+  input[type="date"]::-webkit-calendar-picker-indicator {
+    cursor: pointer;
+    }
+  button:disabled {
+    cursor: not-allowed;
+    }
+}
+
+/* No motion anywhere: every state change is instant (overrides shadcn/tw-animate defaults). */
+*,
+*::before,
+*::after {
+  transition: none !important;
+  animation: none !important;
+  scroll-behavior: auto !important;
+}
+
+/* The one exception: rows sliding into place while a list is reordered by dragging. */
+[data-sortable] {
+  transition: var(--sortable-transition, none) !important;
+}
+
+/* Printing: page 1 portrait (summary), page 2 landscape (socio-matrix). */
+@page {
+  size: A4 portrait;
+  margin: 14mm 14mm 16mm;
+}
+@page matrix {
+  size: A4 landscape;
+  margin: 10mm;
+}
+@media print {
+  html,
+  body {
+    background: white;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+  [data-sonner-toaster] {
+    display: none !important;
+  }
+  .print-matrix {
+    page: matrix;
+    break-before: page;
+  }
 }
