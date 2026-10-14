@@ -147,7 +147,7 @@ export function PrintReport({ survey, results }: { survey: Survey; results: Surv
               <th className="border border-neutral-300 p-1 text-left font-medium text-neutral-500">Кто выбирает ↓ / кого →</th>
               {results.students.map((s) => (
                 <th key={s.id} className="h-[30mm] border border-neutral-300 p-0.5 font-medium">
-                  <span className="mx-auto block max-h-[29mm] overflow-hidden whitespace-nowrap [writing-mode:vertical-rl] rotate-180">
+                  <span className="mx-auto block max-h-[29mm] overflow-hidden text-ellipsis whitespace-nowrap [writing-mode:vertical-rl] rotate-180">
                     {s.num}. {s.name}
                   </span>
                 </th>
