@@ -1,5 +1,6 @@
 import { useCallback } from "react"
 import { toast } from "sonner"
+import { plural } from "@/lib/ru"
 import { downloadAll } from "@/lib/storage/exportFiles"
 import { useWorkspace } from "@/state/context"
 
@@ -37,6 +38,20 @@ export function useFileActions() {
     }
   }, [saver, replaceAll])
 
+  /** «Открыть папку с опросами»: loads every survey file in a folder and keeps saving there. */
+  const openFolder = useCallback(async () => {
+    try {
+      const before = new Set(surveys.map((s) => s.id))
+      const { saved, surveys: merged } = await saver.chooseFolder()
+      if (merged) replaceAll(merged)
+      if (!saved) return
+      const added = (merged ?? []).filter((s) => !before.has(s.id)).length
+      toast.success(added ? `Открыто ${added} ${plural(added, "опрос", "опроса", "опросов")}` : "В этой папке нет опросов")
+    } catch (e) {
+      toast.error(errorText(e, "Не удалось открыть папку."))
+    }
+  }, [saver, surveys, replaceAll])
+
   const regainAccess = useCallback(async () => {
     try {
       const merged = await saver.regainAccess()
@@ -46,5 +61,5 @@ export function useFileActions() {
     }
   }, [saver, replaceAll])
 
-  return { save, chooseFolder, regainAccess }
+  return { save, chooseFolder, openFolder, regainAccess }
 }
